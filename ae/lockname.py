@@ -39,24 +39,27 @@ from typing import ClassVar, Dict, Type, Union
 # noinspection PyProtectedMember
 from ae.core import main_app_instance, _logger, po      # type: ignore   # mypy
 
-__version__ = '0.0.2'
+__version__ = '0.0.3'
 
 
 class NamedLocks:
-    """ create new named lock(s) within the same app.
+    """ manage all named locks of your application.
 
     Migrated from https://stackoverflow.com/users/355230/martineau answer in stackoverflow on the question
     https://stackoverflow.com/questions/37624289/value-based-thread-lock.
 
-    Currently the sys_lock feature is not implemented. Use either ae.lockfile or the github extension portalocker (see
-    https://github.com/WoLpH/portalocker) or the encapsulating extension ilock (https://github.com/symonsoft/ilock).
-    More on system wide named locking: https://stackoverflow.com/questions/6931342/system-wide-mutex-in-python-on-linux.
+    .. note::
+        Currently the sys_lock feature is not implemented. Use either ae.lockfile or the github extension
+        portalocker (see https://github.com/WoLpH/portalocker) or the encapsulating extension ilock
+        (https://github.com/symonsoft/ilock). More on system wide named locking:
+        https://stackoverflow.com/questions/6931342/system-wide-mutex-in-python-on-linux.
+
     """
     locks_change_lock: ClassVar[threading.Lock] = threading.Lock()
     """ threading lock class variable used for to change status of all NamedLock instances """
     active_locks: ClassVar[Dict[str, Union[threading.Lock, threading.RLock]]] = dict()
     """ class variable keeping a dictionary of all active RLock/Lock instances """
-    active_lock_counters: ClassVar[Dict[str, int]] = dict()              #: lock counters class var for reentrant locks
+    active_lock_counters: ClassVar[Dict[str, int]] = dict()         #: lock counters class variable for reentrant locks
 
     def __init__(self, *lock_names: str, reentrant_locks: bool = True, sys_lock: bool = False):
         """ prepare new named lock(s).
@@ -68,13 +71,15 @@ class NamedLocks:
         """
         assert not sys_lock, "sys_lock is currently not implemented"
 
-        self._lock_names = lock_names
+        self._lock_names = lock_names       #: tuple of lock names
         self._lock_class: Type[Union[threading.Lock, threading.RLock]] = \
             threading.RLock if reentrant_locks else threading.Lock
-        self._sys_lock = sys_lock
+        """ used threading lock class """
+        self._sys_lock = sys_lock           #: True if lock will be system-wide (not only application-wide)
         # map class intern dpo method to cae.dpo() or to global dpo (referencing the module method dpo())
         cae = main_app_instance()
         self._print_func = cae.dpo if cae and getattr(cae, 'startup_end', False) else po
+        """ print function used to show debug and error messages """
 
         self.dpo("NamedLocks.__init__", lock_names)
 
