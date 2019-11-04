@@ -1,5 +1,5 @@
 """
-Named threading locks
+named threading locks
 =====================
 
 Named locks are used in multi-threaded applications and based on the python threading lock classes
@@ -39,7 +39,7 @@ from typing import ClassVar, Dict, Type, Union
 # noinspection PyProtectedMember
 from ae.core import main_app_instance, _logger, po      # type: ignore   # mypy
 
-__version__ = '0.0.3'
+__version__ = '0.0.4'
 
 
 class NamedLocks:
