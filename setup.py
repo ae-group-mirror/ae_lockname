@@ -18,6 +18,9 @@ PT_PKG: str = 'sub-package'         #: sub-package portion type
 PT_MOD: str = 'module'              #: module portion type
 PY_EXT = '.py'
 
+REQ_FILE_NAME = 'requirements.txt'
+REQ_TEST_FILE_NAME = 'test_requirements.txt'
+
 version_patch_parser = re.compile(r"(^__version__ = ['\"]\d*[.]\d*[.])(\d+)([a-z]*['\"])", re.MULTILINE)
 
 
@@ -116,15 +119,18 @@ package_vars = determine_package_vars(portion_path)
 package_name = package_vars['package_name']
 repo_root = package_vars['repo_root']
 
-requirements_file = os.path.join(setup_path, 'requirements.txt')
+dev_require = list()
+requirements_file = os.path.join(setup_path, REQ_FILE_NAME)
 if os.path.exists(requirements_file):
-    dev_require = [_ for _ in file_content(requirements_file).strip().split('\n')
-                   if not _.startswith('#')]
-else:
-    dev_require = ['pytest', 'pytest-cov']
+    dev_require.extend(_ for _ in file_content(requirements_file).strip().split('\n') if not _.startswith('#'))
 docs_require = [_ for _ in dev_require if _.startswith('sphinx_')]
-tests_require = [_ for _ in dev_require if _.startswith('pytest')]
+install_require = [_ for _ in dev_require if not _.startswith('sphinx_')]
 portions_package_names = [_ for _ in dev_require if _.startswith('ae_')]
+
+tests_require = list()
+requirements_file = os.path.join(setup_path, REQ_TEST_FILE_NAME)
+if os.path.exists(requirements_file):
+    tests_require.extend(_ for _ in file_content(requirements_file).strip().split('\n') if not _.startswith('#'))
 
 # provide additional package info for root package templates
 package_vars['portions_common_root_path'] = portions_common_root_path
@@ -151,6 +157,7 @@ if __name__ == "__main__":
         # packages=setuptools.find_packages(),
         packages=setuptools.find_namespace_packages(include=[namespace_name]),  # find ae namespace portions
         python_requires=">=3.6",
+        install_requires=install_require,
         extras_require={
             'docs': docs_require,
             'tests': tests_require,
