@@ -38,7 +38,7 @@ from typing import ClassVar, Dict, Type, Union
 # noinspection PyProtectedMember
 from ae.core import main_app_instance, _LOGGER, po      # type: ignore   # mypy
 
-__version__ = '0.1.8'
+__version__ = '0.2.8'
 
 
 class NamedLocks:
