@@ -38,7 +38,7 @@ from typing import ClassVar, Dict, Type, Union
 # noinspection PyProtectedMember
 from ae.core import main_app_instance, _LOGGER, po      # type: ignore   # mypy
 
-__version__ = '0.2.8'
+__version__ = '0.3.8'
 
 
 class NamedLocks:
@@ -56,9 +56,9 @@ class NamedLocks:
     """
     locks_change_lock: ClassVar[threading.Lock] = threading.Lock()
     """ threading lock class variable used to change status of all NamedLock instances """
-    active_locks: ClassVar[Dict[str, Union[threading.Lock, threading.RLock]]] = dict()
+    active_locks: ClassVar[Dict[str, Union[threading.Lock, threading.RLock]]] = {}
     """ class variable keeping a dictionary of all active RLock/Lock instances """
-    active_lock_counters: ClassVar[Dict[str, int]] = dict()         #: lock counters class variable for reentrant locks
+    active_lock_counters: ClassVar[Dict[str, int]] = {}         #: lock counters class variable for reentrant locks
 
     def __init__(self, *lock_names: str, reentrant_locks: bool = True, sys_lock: bool = False):
         """ prepare new named lock(s).
