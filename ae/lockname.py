@@ -134,7 +134,7 @@ class NamedLocks:
                     else:
                         NamedLocks.active_locks[lock_name] = lock_instance
                         NamedLocks.active_lock_counters[lock_name] = 1
-            break
+            break                               # pragma: no cover # false positive
 
         self.dpo("NamedLocks.acquire", lock_name, 'END')
 
