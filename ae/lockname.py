@@ -2,13 +2,13 @@
 named threading locks
 =====================
 
-named locks are used in multi-threaded applications and based on the Python threading lock classes
+named locks are used in multithreaded applications and based on the Python threading lock classes
 :class:`threading.Lock` and :class:`threading.RLock`. the advantage of the named locks in contrary to Python threading
 locks is that a lock don't need to create and store a reference of a Python threading lock object - the
 :class:`NamedLocks` does this automatically for your application and does keep track of all the named locks of your
 application in its class variables.
 
-so a named lock get exclusively identified only by an unique string. and to create other blocking locks you only need a
+so a named lock get exclusively identified only by a unique string. and to create other blocking locks you only need a
 reference to the :class:`NamedLocks` class.
 
 named locks are very useful e.g. if you want to lock a certain record of database table. for this you simply create a
@@ -35,10 +35,11 @@ alternatively and especially if your application want to create multiple named l
 import threading
 from typing import ClassVar, Dict, Type, Union
 
-# noinspection PyProtectedMember
-from ae.core import main_app_instance, _LOGGER, po      # type: ignore   # mypy
+from ae.core import main_app_instance, print_out        # type: ignore
+from ae.console import APP_LOGGER                       # type: ignore
 
-__version__ = '0.3.9'
+
+__version__ = '0.3.10'
 
 
 class NamedLocks:
@@ -48,9 +49,9 @@ class NamedLocks:
     https://stackoverflow.com/questions/37624289/value-based-thread-lock.
 
     .. note::
-        currently the sys_lock feature is not implemented. use either ae.lockfile or the github extension portalocker
+        currently the sys_lock feature is not implemented. use either ae.lockfile or the GitHub extension portalocker
         (see https://github.com/WoLpH/portalocker) or the encapsulating extension ilock
-        (https://github.com/symonsoft/ilock). more on system wide named locking:
+        (https://github.com/symonsoft/ilock). more on system-wide named locking:
         https://stackoverflow.com/questions/6931342/system-wide-mutex-in-python-on-linux.
 
     """
@@ -75,9 +76,9 @@ class NamedLocks:
             threading.RLock if reentrant_locks else threading.Lock
         """ used threading lock class """
         self._sys_lock = sys_lock           #: True if lock will be system-wide (not only application-wide)
-        # map class intern dpo method to cae.dpo() or to global dpo (referencing the module method dpo())
+        # map class intern dpo method to cae.dpo() or to print_out() from ae.core
         cae = main_app_instance()
-        self._print_func = cae.dpo if cae and getattr(cae, 'startup_end', False) else po
+        self._print_func = cae.dpo if cae and getattr(cae, 'startup_end', False) else print_out
         """ print function used to show debug and error messages """
 
         self.dpo("NamedLocks.__init__", lock_names)
@@ -100,7 +101,7 @@ class NamedLocks:
     def dpo(self, *args, **kwargs):
         """ print function which is suppressing printout if debug level is too low. """
         if 'logger' not in kwargs:
-            kwargs['logger'] = _LOGGER
+            kwargs['logger'] = APP_LOGGER
         return self._print_func(*args, **kwargs)
 
     def acquire(self, lock_name: str, *args, **kwargs) -> bool:
