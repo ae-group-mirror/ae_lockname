@@ -1,16 +1,16 @@
-<!-- THIS FILE IS EXCLUSIVELY MAINTAINED by the project ae.ae V0.3.90 -->
-<!-- THIS FILE IS EXCLUSIVELY MAINTAINED by the project aedev.tpl_namespace_root V0.3.12 -->
-# lockname 0.3.9
+<!-- THIS FILE IS EXCLUSIVELY MAINTAINED by the project ae.ae V0.3.95 -->
+<!-- THIS FILE IS EXCLUSIVELY MAINTAINED by the project aedev.tpl_namespace_root V0.3.14 -->
+# lockname 0.3.10
 
 [![GitLab develop](https://img.shields.io/gitlab/pipeline/ae-group/ae_lockname/develop?logo=python)](
     https://gitlab.com/ae-group/ae_lockname)
 [![LatestPyPIrelease](
-    https://img.shields.io/gitlab/pipeline/ae-group/ae_lockname/release0.3.8?logo=python)](
-    https://gitlab.com/ae-group/ae_lockname/-/tree/release0.3.8)
+    https://img.shields.io/gitlab/pipeline/ae-group/ae_lockname/release0.3.9?logo=python)](
+    https://gitlab.com/ae-group/ae_lockname/-/tree/release0.3.9)
 [![PyPIVersions](https://img.shields.io/pypi/v/ae_lockname)](
     https://pypi.org/project/ae-lockname/#history)
 
->ae namespace module portion lockname: named threading locks.
+>ae_lockname module 0.3.10.
 
 [![Coverage](https://ae-group.gitlab.io/ae_lockname/coverage.svg)](
     https://ae-group.gitlab.io/ae_lockname/coverage/index.html)
