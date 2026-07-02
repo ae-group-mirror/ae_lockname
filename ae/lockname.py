@@ -22,8 +22,8 @@ key of the record to lock::
 
         named_lock.release(table_name + primary_key)
 
-if now any other process of your application want to lock the same record (same table name and primary key) then it will
-be blocked until the process that acquired this named lock first is releasing the table record lock.
+if now any other process of your application want to lock the same record (same table name and primary key),
+then it will be blocked. the table record lock can be released by the process that acquired this named lock first.
 
 alternatively and especially if your application want to create multiple named locks you can use the class
 :class:`NamedLocks` as a context manager, passing all the named lock strings to the constructor::
@@ -32,14 +32,15 @@ alternatively and especially if your application want to create multiple named l
         ...     # locked database transaction
 
 """
+from __future__ import annotations
 import threading
-from typing import ClassVar, Dict, Type, Union
+from typing import ClassVar
 
 from ae.core import main_app_instance, print_out        # type: ignore
 from ae.console import APP_LOGGER                       # type: ignore
 
 
-__version__ = '0.3.10'
+__version__ = '0.3.11'
 
 
 class NamedLocks:
@@ -57,9 +58,9 @@ class NamedLocks:
     """
     locks_change_lock: ClassVar[threading.Lock] = threading.Lock()
     """ threading lock class variable used to change status of all NamedLock instances """
-    active_locks: ClassVar[Dict[str, Union[threading.Lock, threading.RLock]]] = {}
+    active_locks: ClassVar[dict[str, threading.Lock | threading.RLock]] = {}
     """ class variable keeping a dictionary of all active RLock/Lock instances """
-    active_lock_counters: ClassVar[Dict[str, int]] = {}         #: lock counters class variable for reentrant locks
+    active_lock_counters: ClassVar[dict[str, int]] = {}         #: lock counters class variable for reentrant locks
 
     def __init__(self, *lock_names: str, reentrant_locks: bool = True, sys_lock: bool = False):
         """ prepare new named lock(s).
@@ -72,7 +73,7 @@ class NamedLocks:
         assert not sys_lock, "sys_lock is currently not implemented"
 
         self._lock_names = lock_names       #: tuple of lock names
-        self._lock_class: Type[Union[threading.Lock, threading.RLock]] = \
+        self._lock_class: type[threading.Lock | threading.RLock] = \
             threading.RLock if reentrant_locks else threading.Lock
         """ used threading lock class """
         self._sys_lock = sys_lock           #: True if lock will be system-wide (not only application-wide)
