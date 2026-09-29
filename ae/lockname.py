@@ -40,7 +40,7 @@ from ae.core import main_app_instance, print_out        # type: ignore
 from ae.console import APP_LOGGER                       # type: ignore
 
 
-__version__ = '0.3.11'
+__version__ = '0.3.12'
 
 
 class NamedLocks:
@@ -136,7 +136,7 @@ class NamedLocks:
                     else:
                         NamedLocks.active_locks[lock_name] = lock_instance
                         NamedLocks.active_lock_counters[lock_name] = 1
-            break                               # pragma: no cover # false positive
+            break                               # false positive
 
         self.dpo("NamedLocks.acquire", lock_name, 'END')
 

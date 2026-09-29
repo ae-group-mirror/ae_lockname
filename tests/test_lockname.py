@@ -139,16 +139,20 @@ class TestNamedLocks:
         assert len(nl2.active_lock_counters) == 0
 
     def test_with_context_with(self):
-        with NamedLocks('test'):
-            pass
+        with NamedLocks('tst_lock_id') as nl:
+            assert 'tst_lock_id' in nl.active_locks
 
     def test_error_context(self):
         with NamedLocks('test2') as nl:
+            assert 'test2' in nl.active_locks
             nl.release('test2')
+            assert 'test2' not in nl.active_locks
+        assert 'test2' not in nl.active_locks
 
         with NamedLocks('test3') as nl:
             assert 'test3' in nl.active_locks
             assert nl.active_locks.pop('test3')
+            assert 'test3' not in nl.active_locks
 
     def test_duplicate_acquire(self):
         def thr():
